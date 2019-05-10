@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 
 	"github.com/dghubble/go-twitter/twitter"
 	"github.com/dghubble/oauth1"
@@ -67,8 +66,7 @@ func HealthHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(http.StatusOK)
-	stats := db.Stats()
-	ret, _ := json.Marshal("OK - Idle conns:" + strconv.Itoa(stats.Idle) + " - In use conns: " + strconv.Itoa(stats.InUse))
+	ret, _ := json.Marshal("OK")
 	w.Write(ret)
 }
 
