@@ -1,18 +1,18 @@
 package main
 
 import (
+	"bufio"
 	"database/sql"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
-	"testing"
 	"os"
-	"bufio"
-	"io/ioutil"
 	"strings"
+	"testing"
+
 	"github.com/gorilla/mux"
-	"encoding/json"
-	"log"
 	_ "github.com/lib/pq"
 )
 
@@ -77,10 +77,10 @@ func TestFetchhHandler(t *testing.T) {
 	}
 
 	type fetchResponse struct {
-		UserName string `json:"UserName"`
-		FollowersCount int `json:"FollowersCount"`
+		UserName       string `json:"UserName"`
+		FollowersCount int    `json:"FollowersCount"`
 	}
-	tt := []fetchResponse {
+	tt := []fetchResponse{
 		fetchResponse{UserName: "adn40", FollowersCount: 750021},
 		fetchResponse{UserName: "Harish Chand", FollowersCount: 280947},
 		fetchResponse{UserName: "Evan Kirstel", FollowersCount: 244293},
@@ -88,13 +88,13 @@ func TestFetchhHandler(t *testing.T) {
 		fetchResponse{UserName: "Ronald van Loon @ #SapphireNow", FollowersCount: 183580},
 	}
 
-	respBody := make([]fetchResponse,0)
+	respBody := make([]fetchResponse, 0)
 	p, err := ioutil.ReadAll(rr.Body)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	json.Unmarshal(p,&respBody)
+	json.Unmarshal(p, &respBody)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -104,7 +104,7 @@ func TestFetchhHandler(t *testing.T) {
 			t.Fatal("API response wrong")
 		}
 	}
-	
+
 }
 
 func TestUpdatethHandler(t *testing.T) {
