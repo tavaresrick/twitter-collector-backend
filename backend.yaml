@@ -1,0 +1,41 @@
+version: "3.4"
+services:
+
+  backend:
+    image: tavaresrick/twitter-collector-backend:$TAG
+    ports:
+      - "8080:8000"
+    environment:
+      - TWITTER_CONSUMER_KEY=$TW_CONSUMER_KEY
+      - TWITTER_CONSUMER_SECRET=$TW_CONSUMER_SECRET
+      - TWITTER_ACCESS_SECRET=$TW_ACCESS_SECRET
+      - TWITTER_APP_ACCESS_TOKEN=$TW_ACCESS_TOKEN
+      - DB_HOST=$DB_HOST
+      - DB_PORT=$DB_PORT
+      - DB_USER=$DB_USER
+      - DB_PASS=$DB_PASS
+      - DB_NAME=$DB_NAME
+    deploy:
+      mode: replicated
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 1m
+        max_failure_ratio: 0.1
+        failure_action: rollback
+        order: start-first
+      placement:
+          constraints:
+              - node.role == worker
+              - node.labels.service == backend
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 20s
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
