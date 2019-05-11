@@ -1,0 +1,27 @@
+version: "3.4"
+services:
+  database:
+    image: tavaresrick/postgres:1.0
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  backend:
+    image: tavaresrick/twitter-collector-backend:$TAG
+    ports:
+      - "9000:8000"
+    depends_on:
+      - database
+    environment:
+      - TWITTER_CONSUMER_KEY=WrN4OWpMGQk3OPLQS0cwUII60
+      - TWITTER_CONSUMER_SECRET=kWe5bq9x7HnFoyEw6dUDPoSYUXbOP1mArywVKt5NLKX9b3tgSU
+      - TWITTER_ACCESS_SECRET=Xcc7stBkkhuVtWi1jw8Bejn2EoLcMaiCFdxqOIrsMVpsA
+      - TWITTER_APP_ACCESS_TOKEN=73514791-uyqMfOnEJaOls6yRy8L7j4P9ypNfF82Nrjv0rsocC
+      - DB_HOST=database
+      - DB_PORT=5432
+      - DB_USER=twitter-collector
+      - DB_PASS=twitter
+      - DB_NAME=twitter-collector
+    deploy:
+      mode: replicated
+      replicas: 1
