@@ -78,7 +78,7 @@ func UpdateHandler(w http.ResponseWriter, r *http.Request) {
 	httpClient := config.Client(oauth1.NoContext, token)
 	client := twitter.NewClient(httpClient)
 
-	truncateTable()
+	TruncateTable()
 
 	for _, tag := range tagList {
 		searchTweetParams := &twitter.SearchTweetParams{
@@ -107,7 +107,7 @@ func UpdateHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Database update\n")
 }
 
-func truncateTable() {
+func TruncateTable() {
 	log.Print("Truncating data table \n")
 	_, err := db.Exec("truncate table twitter_collector.tweet")
 	if err != nil {
@@ -121,6 +121,7 @@ func FetchHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("Fetching data \n")
 	num := mux.Vars(r)["num"]
 
+	fmt.Println(num)
 	rows, err := db.Query("select distinct user_name, user_followers from twitter_collector.tweet order by user_followers desc limit $1", num)
 	if err != nil {
 		log.Fatal(err)
